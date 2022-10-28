@@ -143,6 +143,7 @@ void Task7( _TCHAR str[], size_t element)
 
 void Task8( _TCHAR str[], _TCHAR ch)
 {
+	cout << "[Task8]\n";
 	for (size_t i = 0; i < _tcslen(str); i++)
 	{
 		if (str[i] == ch) 
@@ -155,6 +156,7 @@ void Task8( _TCHAR str[], _TCHAR ch)
 
 void Task9(_TCHAR str[], _TCHAR ch, size_t element)
 {
+	cout << "[Task9]\n";
 	if (element < 1 || element - 1 > _tcslen(str))
 		return;
 	else
@@ -170,7 +172,8 @@ void Task9(_TCHAR str[], _TCHAR ch, size_t element)
 
 int main()
 {
-	_TCHAR str[] = _TEXT("1vav_ _vav1");
+	setlocale(0, "");
+	_TCHAR str[] = _TEXT("1влад_ _далв1");
 	wcout << str << endl << endl;
 	Task1(str);
 	Task2(str);
@@ -187,31 +190,32 @@ int main()
 }
 
 /*RESULT*/
-/*
-1vav_ _vav1
 
+/*
 [Task1]
-1vav_   _vav1
+1влад_  _далв1
 
 [Task2]
-Letter: 6
+Letter: 8
 Numbers: 2
 Symbols: 3
 
 [Task3]
-1vav_   _vav1
+1влад_  _далв1
 Words: 2
 
 [Task5]
-Vowl: 0
+Vowl: 2
 
 [Task6]
 Is a Palendrom
 
 [Task7]
-1vav_   _vav
+1влад_  _дав1
 
-vav_    _vav
+[Task8]
+влад_   _дав
 
-vav_    _vav6
+[Task9]
+влад_   _да6в
 */
