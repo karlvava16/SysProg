@@ -185,3 +185,33 @@ int main()
 	wcout << str << endl << endl;
 	return 0;
 }
+
+/*RESULT*/
+/*
+1vav_ _vav1
+
+[Task1]
+1vav_   _vav1
+
+[Task2]
+Letter: 6
+Numbers: 2
+Symbols: 3
+
+[Task3]
+1vav_   _vav1
+Words: 2
+
+[Task5]
+Vowl: 0
+
+[Task6]
+Is a Palendrom
+
+[Task7]
+1vav_   _vav
+
+vav_    _vav
+
+vav_    _vav6
+*/
