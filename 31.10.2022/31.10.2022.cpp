@@ -1,4 +1,4 @@
-// 31.10.2022.cpp : Defines the entry point for the application.
+п»ї// 31.10.2022.cpp : Defines the entry point for the application.
 //
 
 #include "framework.h"
@@ -18,12 +18,12 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 
-// Основная функция окна. Она является точкой входа в приложение
-//Функция WinMain идентична wWinMain, за исключением того, что аргументы командной строки передаются в виде строки ANSI.
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // дескриптор окна
-                     _In_opt_ HINSTANCE hPrevInstance,  // равне нулю, не имеет никакой логической нагрузки. Раньше исполльзовалось в 16-битном Windows.
-                     _In_ LPWSTR    lpCmdLine,  // аргументы командной строки в виде строки Юникода
-                     _In_ int       nCmdShow) // флаг указывающий на состояние окна (свернуто, развернуто или показано обычным образом).
+// РћСЃРЅРѕРІРЅР°СЏ С„СѓРЅРєС†РёСЏ РѕРєРЅР°. РћРЅР° СЏРІР»СЏРµС‚СЃСЏ С‚РѕС‡РєРѕР№ РІС…РѕРґР° РІ РїСЂРёР»РѕР¶РµРЅРёРµ
+//Р¤СѓРЅРєС†РёСЏ WinMain РёРґРµРЅС‚РёС‡РЅР° wWinMain, Р·Р° РёСЃРєР»СЋС‡РµРЅРёРµРј С‚РѕРіРѕ, С‡С‚Рѕ Р°СЂРіСѓРјРµРЅС‚С‹ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё РїРµСЂРµРґР°СЋС‚СЃСЏ РІ РІРёРґРµ СЃС‚СЂРѕРєРё ANSI.
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // РґРµСЃРєСЂРёРїС‚РѕСЂ РѕРєРЅР°
+                     _In_opt_ HINSTANCE hPrevInstance,  // СЂР°РІРЅРµ РЅСѓР»СЋ, РЅРµ РёРјРµРµС‚ РЅРёРєР°РєРѕР№ Р»РѕРіРёС‡РµСЃРєРѕР№ РЅР°РіСЂСѓР·РєРё. Р Р°РЅСЊС€Рµ РёСЃРїРѕР»Р»СЊР·РѕРІР°Р»РѕСЃСЊ РІ 16-Р±РёС‚РЅРѕРј Windows.
+                     _In_ LPWSTR    lpCmdLine,  // Р°СЂРіСѓРјРµРЅС‚С‹ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё РІ РІРёРґРµ СЃС‚СЂРѕРєРё Р®РЅРёРєРѕРґР°
+                     _In_ int       nCmdShow) // С„Р»Р°Рі СѓРєР°Р·С‹РІР°СЋС‰РёР№ РЅР° СЃРѕСЃС‚РѕСЏРЅРёРµ РѕРєРЅР° (СЃРІРµСЂРЅСѓС‚Рѕ, СЂР°Р·РІРµСЂРЅСѓС‚Рѕ РёР»Рё РїРѕРєР°Р·Р°РЅРѕ РѕР±С‹С‡РЅС‹Рј РѕР±СЂР°Р·РѕРј).
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -46,7 +46,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // дескриптор окна
     MSG msg;
 
     // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0)) // получение сообщения
+    while (GetMessage(&msg, nullptr, 0, 0)) // РїРѕР»СѓС‡РµРЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ
     {
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
         {
@@ -57,9 +57,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // дескриптор окна
 
     return (int) msg.wParam;
     /*
-    Функция возвращает целое значение. 
-    Возвращаемое значение не используется операционной системой,
-    но возвращаемое значение можно использовать для передачи кода состояния в какую-то другую написанную программу.
+    Р¤СѓРЅРєС†РёСЏ РІРѕР·РІСЂР°С‰Р°РµС‚ С†РµР»РѕРµ Р·РЅР°С‡РµРЅРёРµ. 
+    Р’РѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РЅРµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РѕРїРµСЂР°С†РёРѕРЅРЅРѕР№ СЃРёСЃС‚РµРјРѕР№,
+    РЅРѕ РІРѕР·РІСЂР°С‰Р°РµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ РјРѕР¶РЅРѕ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РґР»СЏ РїРµСЂРµРґР°С‡Рё РєРѕРґР° СЃРѕСЃС‚РѕСЏРЅРёСЏ РІ РєР°РєСѓСЋ-С‚Рѕ РґСЂСѓРіСѓСЋ РЅР°РїРёСЃР°РЅРЅСѓСЋ РїСЂРѕРіСЂР°РјРјСѓ.
     */
 }
 
@@ -71,7 +71,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, // дескриптор окна
 //  PURPOSE: Registers the window class.
 //
 
-// вспомогательная функция для инкапсуляция нужных настроек приложения
+// РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅР°СЏ С„СѓРЅРєС†РёСЏ РґР»СЏ РёРЅРєР°РїСЃСѓР»СЏС†РёСЏ РЅСѓР¶РЅС‹С… РЅР°СЃС‚СЂРѕРµРє РїСЂРёР»РѕР¶РµРЅРёСЏ
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wcex;
@@ -104,7 +104,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        create and display the main program window.
 //
 
-// сохраняет эксземпляр дескриптора и создаем окно
+// СЃРѕС…СЂР°РЅСЏРµС‚ СЌРєСЃР·РµРјРїР»СЏСЂ РґРµСЃРєСЂРёРїС‚РѕСЂР° Рё СЃРѕР·РґР°РµРј РѕРєРЅРѕ
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
@@ -134,7 +134,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 //
 
-// обрабатывает сообщения
+// РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚ СЃРѕРѕР±С‰РµРЅРёСЏ
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
