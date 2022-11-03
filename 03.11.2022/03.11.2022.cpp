@@ -1,8 +1,8 @@
-// hm_02.11.2022.cpp : Defines the entry point for the application.
+// 03.11.2022.cpp : Defines the entry point for the application.
 //
 
 #include "framework.h"
-#include "hm_02.11.2022.h"
+#include "03.11.2022.h"
 
 #define MAX_LOADSTRING 100
 
@@ -11,13 +11,10 @@ HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
-HCURSOR hCursor1, hCursor2;
-
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -31,7 +28,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_HM02112022, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_MY03112022, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // Perform application initialization:
@@ -40,7 +37,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_HM02112022));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MY03112022));
 
     MSG msg;
 
@@ -75,12 +72,12 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_HM02112022));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON2));
     wcex.hCursor        = NULL;
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_HM02112022);
+    wcex.lpszMenuName   = NULL;
     wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_ICON1));
 
     return RegisterClassExW(&wcex);
 }
@@ -130,29 +127,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
-
-    case WM_CREATE:
-    {
-        // получаем дескриптор приложения
-        HINSTANCE hInstance = GetModuleHandle(0);
-        // загружаем курсоры из ресурсов приложения
-        hCursor1 = LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR1));
-        hCursor2 = LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR2));
-    }
-    break;
-    case WM_MOUSEMOVE:
-    {
-        COORD crd;
-        // устанавливаем тот или иной курсор в зависимости от местонахождения указателя мыши
-        RECT rect;
-        GetClientRect(hWnd, &rect);
-        crd.X = LOWORD(lParam);
-        if (crd.X > rect.bottom)
-            SetCursor(hCursor2);
-        else
-            SetCursor(hCursor1);
-    }
-    break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
