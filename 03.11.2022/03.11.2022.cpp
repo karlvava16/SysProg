@@ -11,6 +11,26 @@ HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
+
+
+// получаем дескриптор приложения
+HINSTANCE hInstance = GetModuleHandle(0);
+// загружаем курсоры из ресурсов приложения
+HCURSOR hCursor1 = LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR1));
+HCURSOR hCursor2 = LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR2));
+HCURSOR hCursor3 = LoadCursor(hInstance, MAKEINTRESOURCE(IDC_CURSOR3));
+
+RECT rRect;
+int iX;
+int iY;
+TCHAR tcStr[100];
+int in = 0;
+int on = 0;
+int out = 0;
+
+
+
+
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -122,11 +142,54 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+   
+
     switch (message)
     {
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+    case WM_MOUSEMOVE:
+    {
+        GetClientRect(hWnd, &rRect);
+        iX = LOWORD(lParam);
+        iY = HIWORD(lParam);
+        if (iX > (rRect.left + 100) && iY > (rRect.top + 100) &&
+            iX < (rRect.right - 100) && iY < (rRect.bottom - 100))
+        {
+            SetCursor(hCursor1);
+        }
+        else if (iX < (rRect.left + 100) || iY < (rRect.top + 100) ||
+            iX >(rRect.right - 100) || iY >(rRect.bottom - 100))
+        {
+            SetCursor(hCursor2);
+        }
+        else
+            SetCursor(hCursor3);
+    }
+    break;
+    case WM_LBUTTONDOWN:
+    {
+        GetClientRect(hWnd, &rRect);
+        iX = LOWORD(lParam);
+        iY = HIWORD(lParam);
+        if (iX > (rRect.left + 100) && iY > (rRect.top + 100) &&
+            iX < (rRect.right - 100) && iY < (rRect.bottom - 100))
+        {
+            in++;
+        }
+        else if (iX < (rRect.left + 100) || iY < (rRect.top + 100) ||
+            iX > (rRect.right - 100) || iY >(rRect.bottom - 100))
+        {
+            out++;
+        }
+        else
+            on++;
+        wsprintf(tcStr, _TEXT("in: %d; on: %d; out: %d"), in, on, out);
+        MessageBox(0, tcStr, TEXT("Clicked"), MB_OK | MB_ICONINFORMATION);
+    }
+
+    break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
