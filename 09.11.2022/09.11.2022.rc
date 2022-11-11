@@ -44,16 +44,6 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Russian (Russia) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -65,13 +55,13 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "Dialog"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    CONTROL         "????? ?????",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,120,49,59,10
-    CONTROL         "???????????? ?????",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,120,67,86,10
-    CONTROL         "??????? ??????????????",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,120,85,103,10
-    LISTBOX         IDC_LIST1,33,18,55,104,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON      "Button1",IDC_BUTTON1,37,140,50,14
-    GROUPBOX        "?????????????? ????????",IDC_STATIC,111,38,128,63
-    EDITTEXT        IDC_EDIT1,120,135,102,21,ES_AUTOHSCROLL | ES_READONLY
+    CONTROL         "Сумма чисел",IDC_SUM,"Button",BS_AUTORADIOBUTTON | WS_GROUP,120,49,59,10
+    CONTROL         "Произведение чисел",IDC_MULT,"Button",BS_AUTORADIOBUTTON,120,67,86,10
+    CONTROL         "Среднее арифметическое",IDC_AVERAGE,"Button",BS_AUTORADIOBUTTON,120,85,103,10
+    LISTBOX         IDC_LIST1,17,18,71,104,LBS_SORT | LBS_MULTIPLESEL | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Start",IDC_BUTTON1,37,140,50,14
+    GROUPBOX        "Арифметическое действие",IDC_STATIC,111,38,128,63
+    EDITTEXT        IDC_RESULT,120,135,102,21,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER
 END
 
 
@@ -105,7 +95,7 @@ BEGIN
     0
 END
 
-#endif    // English (United States) resources
+#endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
