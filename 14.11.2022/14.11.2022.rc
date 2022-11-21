@@ -13,47 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Russian (Russia) resources
+// Russian (Neutral) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
-LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+LANGUAGE LANG_RUSSIAN, SUBLANG_NEUTRAL
 #pragma code_page(1251)
-
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
-
-1 TEXTINCLUDE 
-BEGIN
-    "resource.h\0"
-END
-
-2 TEXTINCLUDE 
-BEGIN
-    "#include ""winres.h""\r\n"
-    "\0"
-END
-
-3 TEXTINCLUDE 
-BEGIN
-    "\r\n"
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-#endif    // Russian (Russia) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -65,57 +29,59 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "Dialog"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    PUSHBUTTON      "????????????",IDC_BUTTON1,51,27,139,41
-    PUSHBUTTON      "????",IDC_BUTTON2,51,77,139,41
-    GROUPBOX        "????",IDC_STATIC,49,135,143,40
-    EDITTEXT        IDC_EDIT1,63,146,104,20,ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "???",IDC_STATIC,168,157,29,8
+    PUSHBUTTON      "¿¬“Œ«¿œ–¿¬ ¿",IDC_GASSTATION,51,27,139,41
+    PUSHBUTTON      " ¿‘≈",IDC_CAFE,51,77,139,41
+    GROUPBOX        "—◊≈“",IDC_STATIC,49,135,143,40
+    EDITTEXT        IDC_RESULT,63,146,104,20,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER,WS_EX_RIGHT
+    LTEXT           "„Ì",IDC_STATIC,168,157,29,8
 END
 
 IDD_DIALOG2 DIALOGEX 0, 0, 170, 221
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Dialog"
+CAPTION "¿¬“Œ«¿œ–¿¬ ¿"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    LTEXT           "??????",IDC_STATIC,25,36,46,8
-    LTEXT           "????",IDC_STATIC,25,55,46,8
-    EDITTEXT        IDC_EDIT1,58,52,72,14,ES_AUTOHSCROLL | ES_READONLY
-    COMBOBOX        IDC_COMBO1,58,35,72,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "???",IDC_STATIC,134,56,29,8
-    GROUPBOX        "",IDC_STATIC,25,71,59,52
-    CONTROL         " ??????????",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,25,86,57,10
-    CONTROL         "????",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,25,103,33,10
-    EDITTEXT        IDC_EDIT4,88,84,42,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT5,88,100,42,14,ES_AUTOHSCROLL
-    LTEXT           "???",IDC_STATIC,134,103,29,8
-    LTEXT           "?",IDC_STATIC,134,87,8,8
-    GROUPBOX        "????",IDC_STATIC,18,132,131,71
-    EDITTEXT        IDC_EDIT7,57,161,45,14,ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "???",IDC_STATIC,105,164,29,8
+    LTEXT           "¡ÂÌÁËÌ",IDC_STATIC,25,25,46,8
+    LTEXT           "÷ÂÌ‡",IDC_STATIC,25,66,46,8
+    EDITTEXT        IDC_COMBO_RESULT,58,63,72,14,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER
+    COMBOBOX        IDC_COMBO1,58,24,72,36,CBS_DROPDOWNLIST | CBS_NOINTEGRALHEIGHT | WS_VSCROLL
+    LTEXT           "„Ì",IDC_STATIC,134,67,29,8
+    GROUPBOX        "",IDC_STATIC,25,82,59,52
+    CONTROL         " ÓÎË˜ÂÒÚ‚Ó",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON | WS_GROUP,25,97,55,10
+    CONTROL         "—ÛÏÏ‡",IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,25,112,37,10
+    EDITTEXT        IDC_AMOUNT_GASSTATION,88,95,42,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_CHECK_GASSTATION,88,111,42,14,ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+    LTEXT           "„Ì",IDC_STATIC,134,114,29,8
+    LTEXT           "Î",IDC_STATIC,134,98,8,8
+    GROUPBOX        "—◊≈“",IDC_STATIC,18,143,131,71
+    LTEXT           "„Ì",IDC_STATIC,115,168,29,8
+    EDITTEXT        IDC_RESULT_GASSTATION,51,157,59,20,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER,WS_EX_RIGHT
+    PUSHBUTTON      "œŒ—◊»“¿“‹",IDOK,54,186,50,14
 END
 
 IDD_DIALOG3 DIALOGEX 0, 0, 170, 221
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Dialog"
+CAPTION " ¿‘≈"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    LTEXT           "????",IDC_STATIC,88,28,18,8
-    GROUPBOX        "????",IDC_STATIC,18,132,131,71
-    EDITTEXT        IDC_EDIT7,57,161,45,14,ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "???",IDC_STATIC,105,164,15,8
-    LTEXT           "???-??",IDC_STATIC,115,28,23,8
-    EDITTEXT        IDC_EDIT1,85,38,23,14,ES_AUTOHSCROLL | ES_READONLY
-    EDITTEXT        IDC_EDIT2,85,55,23,14,ES_AUTOHSCROLL | ES_READONLY
-    EDITTEXT        IDC_EDIT3,85,72,23,14,ES_AUTOHSCROLL | ES_READONLY
-    EDITTEXT        IDC_EDIT6,85,90,23,14,ES_AUTOHSCROLL | ES_READONLY
-    EDITTEXT        IDC_EDIT8,115,38,23,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT9,115,55,23,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT4,115,72,23,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_EDIT10,115,90,23,14,ES_AUTOHSCROLL
-    CONTROL         "???-???",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,41,42,10
-    CONTROL         "?????????",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,57,51,10
-    CONTROL         "????????-???",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,75,65,10
-    CONTROL         "????-????",IDC_CHECK4,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,92,50,10
+    LTEXT           "÷ÂÌ‡",IDC_STATIC,88,28,18,8
+    GROUPBOX        "—◊≈“",IDC_STATIC,18,132,131,71
+    LTEXT           "„Ì",IDC_STATIC,109,153,15,8
+    LTEXT           " ÓÎ-‚Ó",IDC_STATIC,126,28,23,8
+    EDITTEXT        IDC_EDIT1,85,38,30,14,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER
+    EDITTEXT        IDC_EDIT2,85,55,30,14,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER
+    EDITTEXT        IDC_EDIT3,85,72,31,14,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER
+    EDITTEXT        IDC_EDIT7,120,72,29,14,ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+    EDITTEXT        IDC_EDIT5,120,38,29,14,ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+    EDITTEXT        IDC_EDIT6,120,55,29,14,ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+    EDITTEXT        IDC_EDIT4,85,90,30,14,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER
+    EDITTEXT        IDC_EDIT8,120,90,29,14,ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+    CONTROL         "’ÓÚ-‰Ó„",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,41,42,10
+    CONTROL         "√‡Ï·Û„Â",IDC_CHECK2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,57,51,10
+    CONTROL         " ‡ÚÓ¯Í‡-ÙË",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,75,65,10
+    CONTROL         " ÓÍ‡-ÍÓÎ‡",IDC_CHECK4,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,20,92,50,10
+    EDITTEXT        IDC_EDIT9,49,143,59,20,ES_AUTOHSCROLL | ES_READONLY | ES_NUMBER,WS_EX_RIGHT
+    PUSHBUTTON      "œŒ—◊»“¿“‹",IDOK,54,178,50,14
 END
 
 
@@ -151,7 +117,6 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 163
         VERTGUIDE, 20
-        VERTGUIDE, 138
         VERTGUIDE, 149
         TOPMARGIN, 7
         BOTTOMMARGIN, 214
@@ -180,7 +145,43 @@ BEGIN
     0
 END
 
-#endif    // English (United States) resources
+#endif    // Russian (Neutral) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Russian (Russia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
