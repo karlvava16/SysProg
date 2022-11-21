@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyDinamicLinkLibrary", "MyD
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Main", "Main\Main.vcxproj", "{66270F34-F175-4B55-B1B1-7DF525DDE0B8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "Test\Test.vcxproj", "{F118102B-30B3-4CC4-902B-597DA773807D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{66270F34-F175-4B55-B1B1-7DF525DDE0B8}.Release|x64.Build.0 = Release|x64
 		{66270F34-F175-4B55-B1B1-7DF525DDE0B8}.Release|x86.ActiveCfg = Release|Win32
 		{66270F34-F175-4B55-B1B1-7DF525DDE0B8}.Release|x86.Build.0 = Release|Win32
+		{F118102B-30B3-4CC4-902B-597DA773807D}.Debug|x64.ActiveCfg = Debug|x64
+		{F118102B-30B3-4CC4-902B-597DA773807D}.Debug|x64.Build.0 = Debug|x64
+		{F118102B-30B3-4CC4-902B-597DA773807D}.Debug|x86.ActiveCfg = Debug|Win32
+		{F118102B-30B3-4CC4-902B-597DA773807D}.Debug|x86.Build.0 = Debug|Win32
+		{F118102B-30B3-4CC4-902B-597DA773807D}.Release|x64.ActiveCfg = Release|x64
+		{F118102B-30B3-4CC4-902B-597DA773807D}.Release|x64.Build.0 = Release|x64
+		{F118102B-30B3-4CC4-902B-597DA773807D}.Release|x86.ActiveCfg = Release|Win32
+		{F118102B-30B3-4CC4-902B-597DA773807D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
