@@ -1,0 +1,6 @@
+|File: 1test.txt|
+1 2 3 проверка 
+
+|File: 2test.txt|
+1 2 3 проверка 
+
