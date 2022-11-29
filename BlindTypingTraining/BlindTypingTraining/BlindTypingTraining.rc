@@ -61,7 +61,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 IDD_DIALOG1 DIALOGEX 0, 0, 864, 421
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "?"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
@@ -177,6 +177,16 @@ BEGIN
         MENUITEM "Blind typing level",          ID_LEVELS_BLINDTYPINGLEVEL
     END
 END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON1               ICON                    "TT.ico"
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
