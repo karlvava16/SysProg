@@ -1,0 +1,195 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Russian (Russia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Russian (Russia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 864, 421
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "?"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Button1",IDC_BUTTON1,313,358,193,28
+    PUSHBUTTON      "Button2",IDC_BUTTON2,234,327,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON3,274,327,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON4,314,327,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON5,353,327,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON6,392,327,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON7,432,327,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON8,471,327,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON9,511,327,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON10,549,327,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON11,588,327,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON12,213,297,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON13,253,297,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON14,293,297,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON15,332,297,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON16,371,297,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON17,411,297,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON18,450,297,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON19,489,297,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON20,528,297,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON21,567,297,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON22,606,297,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON24,204,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON25,244,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON26,284,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON27,324,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON28,363,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON29,403,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON30,441,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON31,480,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON32,520,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON33,559,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON34,597,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON35,636,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON36,675,269,36,26
+    PUSHBUTTON      "Button2",IDC_BUTTON23,645,297,65,26
+    PUSHBUTTON      "Button2",IDC_BUTTON37,627,327,84,26
+    PUSHBUTTON      "Button2",IDC_BUTTON42,151,327,79,26
+    PUSHBUTTON      "Button2",IDC_BUTTON43,150,297,60,26
+    PUSHBUTTON      "Button2",IDC_BUTTON44,151,270,49,26
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 857
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 414
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DIALOG1 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU1 MENU
+BEGIN
+    POPUP "Menu"
+    BEGIN
+        MENUITEM "Start",                       ID_MENU_START
+        MENUITEM "Restart",                     ID_MENU_RESTART
+        MENUITEM "Exit",                        ID_MENU_EXIT
+    END
+    POPUP "Levels"
+    BEGIN
+        POPUP "Base levels"
+        BEGIN
+            MENUITEM "1 level",                     ID_BASELEVEL_1LEVEL
+            MENUITEM "2 level",                     ID_BASELEVEL_2LEVEL
+            MENUITEM "3 level",                     ID_BASELEVEL_3LEVEL
+            MENUITEM "4 level",                     ID_BASELEVEL_4LEVEL
+        END
+        POPUP "Normal levels"
+        BEGIN
+            MENUITEM "5 level",                     ID_NORMALLEVELS_5LEVEL
+            MENUITEM "6 level",                     ID_NORMALLEVELS_6LEVEL
+            MENUITEM "7 level",                     ID_NORMALLEVELS_7LEVEL
+            MENUITEM "8 level",                     ID_NORMALLEVELS_8LEVEL
+        END
+        POPUP "Hard levels"
+        BEGIN
+            MENUITEM "9 level",                     ID_HARDLEVELS_9LEVEL
+            MENUITEM "10 level",                    ID_HARDLEVELS_10LEVEL
+            MENUITEM "11 level",                    ID_HARDLEVELS_11LEVEL
+            MENUITEM "12 level",                    ID_HARDLEVELS_12LEVEL
+        END
+        MENUITEM "Blind typing level",          ID_LEVELS_BLINDTYPINGLEVEL
+    END
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
