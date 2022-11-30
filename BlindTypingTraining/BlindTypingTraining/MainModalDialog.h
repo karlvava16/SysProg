@@ -20,4 +20,5 @@ public:
 	COLORREF color;
 	HICON hIcon;
 	PNOTIFYICONDATA pNID;
+	HANDLE hMutex;
 };

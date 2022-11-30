@@ -26,6 +26,15 @@ void CMainModalDialog::Cls_OnClose(HWND hwnd)
 
 BOOL CMainModalDialog::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam) 
 {
+	TCHAR GUID[] = TEXT("{D99CD3E0-670D-4def-9B74-99FD7E793DFB}");
+	hMutex = CreateMutex(NULL, FALSE, GUID);
+	DWORD dwAnswer = WaitForSingleObject(hMutex, 0);
+	if (dwAnswer == WAIT_TIMEOUT)
+	{
+		MessageBox(hwnd, TEXT("Ќельз€ запускать более одной копии приложени€!!!"), TEXT("TKB"), MB_OK | MB_ICONINFORMATION);
+		EndDialog(hwnd, 0);
+	}
+
 	SetWindowText(hwnd, TEXT("TKB"));
 	hDialog = hwnd;
 
