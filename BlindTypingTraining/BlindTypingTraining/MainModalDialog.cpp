@@ -24,26 +24,22 @@ void CMainModalDialog::Cls_OnClose(HWND hwnd)
 }
 
 
-BOOL CMainModalDialog::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam) 
+BOOL CMainModalDialog::SingleWindowCheck(HWND hwnd)
 {
 	TCHAR GUID[] = TEXT("{D99CD3E0-670D-4def-9B74-99FD7E793DFB}");
 	hMutex = CreateMutex(NULL, FALSE, GUID);
 	DWORD dwAnswer = WaitForSingleObject(hMutex, 0);
 	if (dwAnswer == WAIT_TIMEOUT)
 	{
-		MessageBox(hwnd, TEXT("Нельзя запускать более одной копии приложения!!!"), TEXT("TKB"), MB_OK | MB_ICONINFORMATION);
+		MessageBox(hwnd, TEXT("Приложение TKL уже запущено."), TEXT("TKB"), MB_OK | MB_ICONINFORMATION);
 		EndDialog(hwnd, 0);
+		return FALSE;
 	}
+	return TRUE;
+}
 
-	SetWindowText(hwnd, TEXT("TKB"));
-	hDialog = hwnd;
-
-	//lf.lfHeight = 20;
-	//hFont = CreateFontIndirect(&lf);
-	//hEdit = GetDlgItem(hwnd, IDC_RESULT);
-
-	SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
-
+void CMainModalDialog::TrayInit(HWND hwnd)
+{
 	// Получим дескриптор экземпляра приложения
 	HINSTANCE hInst = GetModuleHandle(NULL);
 
@@ -75,13 +71,36 @@ BOOL CMainModalDialog::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam
 	lstrcpy(pNID->szInfo, TEXT("Научись слепой печати)"));
 	lstrcpy(pNID->szInfoTitle, TEXT("TKB"));
 	pNID->uID = IDI_ICON1; // предопределённый идентификатор иконки
+}
+
+BOOL CMainModalDialog::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam) 
+{
+	//use mutex to check how many dialog exist (must be only one main dialog)
+	if (!SingleWindowCheck(hwnd)) return FALSE;
+
+	//set HWND for main dialog
+	SetWindowText(hwnd, TEXT("TKB"));
+	hDialog = hwnd;
+
+	//set HWND menu and attach menu to main dialog
+	hMenu = LoadMenu(GetModuleHandle(NULL), MAKEINTRESOURCE(IDR_MENU1));
+	SetMenu(hDialog, hMenu);
+
+	//lf.lfHeight = 20;
+	//hFont = CreateFontIndirect(&lf);
+	//hEdit = GetDlgItem(hwnd, IDC_RESULT);
+	//SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
+
+	//set tray icon and notifications
+	TrayInit(hwnd);
 
 	return TRUE;
 }
 
 
 void CMainModalDialog::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
-{/*
+{
+	/*
 	if (id == IDC_GASSTATION)
 	{
 		GasStationModalDialog gs;
