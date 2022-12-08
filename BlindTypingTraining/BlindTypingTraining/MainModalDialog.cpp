@@ -71,6 +71,7 @@ void CMainModalDialog::TrayInit(HWND hwnd)
 	lstrcpy(pNID->szInfo, TEXT("Научись слепой печати)"));
 	lstrcpy(pNID->szInfoTitle, TEXT("TKB"));
 	pNID->uID = IDI_ICON1; // предопределённый идентификатор иконки
+	 
 }
 
 BOOL CMainModalDialog::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam) 
@@ -100,6 +101,7 @@ BOOL CMainModalDialog::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam
 
 void CMainModalDialog::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 {
+
 	/*
 	if (id == IDC_GASSTATION)
 	{
@@ -146,10 +148,21 @@ BOOL CALLBACK CMainModalDialog::DlgProc(HWND hwnd, UINT message, WPARAM wParam, 
 {
 	switch(message)
 	{
+		if (message == WM_KEYDOWN)
+		{
+			MessageBox(NULL, TEXT("Test"), TEXT("test"), MB_OK);
+
+			if (wParam == VK_RETURN)
+			{
+			}
+		}
+
 		HANDLE_MSG(hwnd, WM_CLOSE, ptr->Cls_OnClose);
 		HANDLE_MSG(hwnd, WM_INITDIALOG, ptr->Cls_OnInitDialog);
 		HANDLE_MSG(hwnd, WM_COMMAND, ptr->Cls_OnCommand);
 		HANDLE_MSG(hwnd, WM_SIZE, ptr->Cls_OnSize);
+
+		
 	}
 	// пользовательское сообщение
 	if (message == WM_ICON)

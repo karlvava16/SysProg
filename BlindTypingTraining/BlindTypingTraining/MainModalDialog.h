@@ -17,9 +17,9 @@ public:
 	void Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify);
 	void Cls_OnClose(HWND hwnd);
 	void Cls_OnSize(HWND hwnd, UINT state, int cx, int cy);
-
 	void OnTrayIcon(WPARAM wp, LPARAM lp); // обработчик пользовательского сообщени€
 	
+	void ButtonPressed();
 	
 	static double dCheck;
 	HWND hEdit, hDialog;
