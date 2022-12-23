@@ -1,10 +1,16 @@
 #pragma once
 #include "header.h"
 
+std::wstring LoadText();
+
+DWORD WINAPI SpeedThread(LPVOID lp);
+DWORD WINAPI TimeThread(LPVOID lp);
+LRESULT CALLBACK KeyboardProc(int idCode, WPARAM wParam, LPARAM lParam);
+
 class CMainModalDialog
 {
 public:
-		static CMainModalDialog* ptr;
+	static CMainModalDialog* ptr;
 	CMainModalDialog(void);
 	~CMainModalDialog(void);
 	
@@ -18,16 +24,10 @@ public:
 	void Cls_OnClose(HWND hwnd);
 	void Cls_OnSize(HWND hwnd, UINT state, int cx, int cy);
 	void OnTrayIcon(WPARAM wp, LPARAM lp); // обработчик пользовательского сообщени€
-	
-	void ButtonPressed();
-	
-	static double dCheck;
-	HWND hEdit, hDialog;
+
 	LOGFONT lf;
 	HFONT hFont;
-	COLORREF color;
 	HICON hIcon;
 	PNOTIFYICONDATA pNID;
-	HANDLE hMutex;
-	HMENU hMenu;
+
 };

@@ -1,10 +1,52 @@
-#define WM_ICON WM_APP
+ï»¿#define WM_ICON WM_APP
 #define ID_TRAYICON WM_USER
 #include "MainModalDialog.h"
 
-
 CMainModalDialog* CMainModalDialog::ptr = NULL;
-double CMainModalDialog::dCheck = 0;
+
+HHOOK hHook;
+HANDLE hndlTime;
+HANDLE hndlSpeed;
+
+TCHAR tcTextMain[TEXT_SIZE];
+int iTextLength;
+TCHAR tcCurrentText[TEXT_SIZE]; 
+TCHAR tcTextMistakes[TEXT_SIZE];
+TCHAR TextKB[TEXT_SIZE];
+
+TCHAR tcSpeedText[TEXT_SIZE];
+int iSpeed;
+
+HWND hDialog;
+HWND hMistakes;
+HWND hTime;
+HWND hSpeed;
+
+WPARAM wp;
+
+HMENU hMenu;
+
+short minutes;
+short seconds;
+UINT uMistakes;
+HWND hProgress;
+UINT uProgressbarPosition;
+
+
+
+HANDLE hMutex;
+
+
+UINT clicks;
+
+HWND hMain;
+HWND hNumbers[10];
+HWND hCharacters[26];
+HWND ButtonComma, ButtonDot;
+HWND ButtonSpace;
+
+
+
 
 
 CMainModalDialog::CMainModalDialog(void)
@@ -16,13 +58,8 @@ CMainModalDialog::CMainModalDialog(void)
 CMainModalDialog::~CMainModalDialog(void)
 {
 	delete pNID;
+	ReleaseMutex(hMutex);
 }
-
-void CMainModalDialog::Cls_OnClose(HWND hwnd)
-{
-	EndDialog(hwnd, IDCANCEL);
-}
-
 
 BOOL CMainModalDialog::SingleWindowCheck(HWND hwnd)
 {
@@ -31,7 +68,7 @@ BOOL CMainModalDialog::SingleWindowCheck(HWND hwnd)
 	DWORD dwAnswer = WaitForSingleObject(hMutex, 0);
 	if (dwAnswer == WAIT_TIMEOUT)
 	{
-		MessageBox(hwnd, TEXT("Ïðèëîæåíèå TKL óæå çàïóùåíî."), TEXT("TKB"), MB_OK | MB_ICONINFORMATION);
+		MessageBox(hwnd, TEXT("TKB already in work"), TEXT("TKB"), MB_OK | MB_ICONINFORMATION);
 		EndDialog(hwnd, 0);
 		return FALSE;
 	}
@@ -40,135 +77,427 @@ BOOL CMainModalDialog::SingleWindowCheck(HWND hwnd)
 
 void CMainModalDialog::TrayInit(HWND hwnd)
 {
-	// Ïîëó÷èì äåñêðèïòîð ýêçåìïëÿðà ïðèëîæåíèÿ
+	// ÐŸÐ¾Ð»ÑƒÑ‡Ð¸Ð¼ Ð´ÐµÑÐºÑ€Ð¸Ð¿Ñ‚Ð¾Ñ€ ÑÐºÐ·ÐµÐ¼Ð¿Ð»ÑÑ€Ð° Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ
 	HINSTANCE hInst = GetModuleHandle(NULL);
 
-	hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON1)); // çàãðóæàåì èêîíêó
-	SetClassLong(hDialog, GCL_HICON, LONG(hIcon)); // óñòàíàâëèâàåì èêîíêó â ãëàâíîì îêíå ïðèëîæåíèÿ
-	memset(pNID, 0, sizeof(NOTIFYICONDATA)); //Îáíóëåíèå ñòðóêòóðû
-	pNID->cbSize = sizeof(NOTIFYICONDATA); //ðàçìåð ñòðóêòóðû
-	pNID->hIcon = hIcon; //çàãðóæàåì ïîëüçîâàòåëüñêóþ èêîíêó
-	pNID->hWnd = hwnd; //äåñêðèïòîð îêíà, êîòîðîå áóäåò ïîëó÷àòü óâåäîìëÿþùèå ñîîáùåíèÿ,
-	// àññîöèèðîâàííûå ñ èêîíêîé â òðýå.	
-	lstrcpy(pNID->szTip, TEXT("TKB")); // Ïîäñêàçêà
+	hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON1)); // Ð·Ð°Ð³Ñ€ÑƒÐ¶Ð°ÐµÐ¼ Ð¸ÐºÐ¾Ð½ÐºÑƒ
+	SetClassLong(hDialog, GCL_HICON, LONG(hIcon)); // ÑƒÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¸ÐºÐ¾Ð½ÐºÑƒ Ð² Ð³Ð»Ð°Ð²Ð½Ð¾Ð¼ Ð¾ÐºÐ½Ðµ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ
+	memset(pNID, 0, sizeof(NOTIFYICONDATA)); //ÐžÐ±Ð½ÑƒÐ»ÐµÐ½Ð¸Ðµ ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ñ‹
+	pNID->cbSize = sizeof(NOTIFYICONDATA); //Ñ€Ð°Ð·Ð¼ÐµÑ€ ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€Ñ‹
+	pNID->hIcon = hIcon; //Ð·Ð°Ð³Ñ€ÑƒÐ¶Ð°ÐµÐ¼ Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒÑÐºÑƒÑŽ Ð¸ÐºÐ¾Ð½ÐºÑƒ
+	pNID->hWnd = hwnd; //Ð´ÐµÑÐºÑ€Ð¸Ð¿Ñ‚Ð¾Ñ€ Ð¾ÐºÐ½Ð°, ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ðµ Ð±ÑƒÐ´ÐµÑ‚ Ð¿Ð¾Ð»ÑƒÑ‡Ð°Ñ‚ÑŒ ÑƒÐ²ÐµÐ´Ð¾Ð¼Ð»ÑÑŽÑ‰Ð¸Ðµ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ,
+	// Ð°ÑÑÐ¾Ñ†Ð¸Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ñ‹Ðµ Ñ Ð¸ÐºÐ¾Ð½ÐºÐ¾Ð¹ Ð² Ñ‚Ñ€ÑÐµ.	
+	lstrcpy(pNID->szTip, TEXT("TKB")); // ÐŸÐ¾Ð´ÑÐºÐ°Ð·ÐºÐ°
 
-	pNID->uCallbackMessage = WM_ICON; // Ïîëüçîâàòåëüñêîå ñîîáùåíèå
-	// Ñèñòåìà èñïîëüçóåò ýòîò èäåíòèôèêàòîð äëÿ ïîñûëêè óâåäîìëÿþùèõ
-	// ñîîáùåíèé îêíó, äåñêðèïòîð êîòîðîãî õðàíèòñÿ â ïîëå hWnd. Ýòè ñîîáùåíèÿ
-	// ïîñûëàþòñÿ, êîãäà ïðîèñõîäèò "ìûøèíîå" ñîîáùåíèå â ïðÿìîóãîëüíèêå, ãäå
-	// ðàñïîëîæåíà èêîíêà, èëè èêîíêà âûáèðàåòñÿ èëè àêòèâèçèðóåòñÿ ñ ïîìîùüþ
-	// êëàâèàòóðû. Ïàðàìåòð ñîîáùåíèÿ wParam ñîäåðæèò ïðè ýòîì èäåíòèôèêàòîð
-	// èêîíêè â òðýå, ãäå ïðîèçîøëî ñîáûòèå, à ïàðàìåòð ñîîáùåíèÿ lParam - 
-	// "ìûøèíîå" èëè êëàâèàòóðíîå ñîîáùåíèå, àññîöèèðîâàííîå ñ ñîáûòèåì.
-	// Ïðèìåð ñîáûòèÿ: ùåë÷îê ìûøêè ïî èêîíêå â òðýå.
+	pNID->uCallbackMessage = WM_ICON; // ÐŸÐ¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒÑÐºÐ¾Ðµ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ
+	// Ð¡Ð¸ÑÑ‚ÐµÐ¼Ð° Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÑ‚ ÑÑ‚Ð¾Ñ‚ Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ð´Ð»Ñ Ð¿Ð¾ÑÑ‹Ð»ÐºÐ¸ ÑƒÐ²ÐµÐ´Ð¾Ð¼Ð»ÑÑŽÑ‰Ð¸Ñ…
+	// ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ð¹ Ð¾ÐºÐ½Ñƒ, Ð´ÐµÑÐºÑ€Ð¸Ð¿Ñ‚Ð¾Ñ€ ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ð³Ð¾ Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑÑ Ð² Ð¿Ð¾Ð»Ðµ hWnd. Ð­Ñ‚Ð¸ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ
+	// Ð¿Ð¾ÑÑ‹Ð»Ð°ÑŽÑ‚ÑÑ, ÐºÐ¾Ð³Ð´Ð° Ð¿Ñ€Ð¾Ð¸ÑÑ…Ð¾Ð´Ð¸Ñ‚ "Ð¼Ñ‹ÑˆÐ¸Ð½Ð¾Ðµ" ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ Ð² Ð¿Ñ€ÑÐ¼Ð¾ÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸ÐºÐµ, Ð³Ð´Ðµ
+	// Ñ€Ð°ÑÐ¿Ð¾Ð»Ð¾Ð¶ÐµÐ½Ð° Ð¸ÐºÐ¾Ð½ÐºÐ°, Ð¸Ð»Ð¸ Ð¸ÐºÐ¾Ð½ÐºÐ° Ð²Ñ‹Ð±Ð¸Ñ€Ð°ÐµÑ‚ÑÑ Ð¸Ð»Ð¸ Ð°ÐºÑ‚Ð¸Ð²Ð¸Ð·Ð¸Ñ€ÑƒÐµÑ‚ÑÑ Ñ Ð¿Ð¾Ð¼Ð¾Ñ‰ÑŒÑŽ
+	// ÐºÐ»Ð°Ð²Ð¸Ð°Ñ‚ÑƒÑ€Ñ‹. ÐŸÐ°Ñ€Ð°Ð¼ÐµÑ‚Ñ€ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ wParam ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ñ‚ Ð¿Ñ€Ð¸ ÑÑ‚Ð¾Ð¼ Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€
+	// Ð¸ÐºÐ¾Ð½ÐºÐ¸ Ð² Ñ‚Ñ€ÑÐµ, Ð³Ð´Ðµ Ð¿Ñ€Ð¾Ð¸Ð·Ð¾ÑˆÐ»Ð¾ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ðµ, Ð° Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ lParam - 
+	// "Ð¼Ñ‹ÑˆÐ¸Ð½Ð¾Ðµ" Ð¸Ð»Ð¸ ÐºÐ»Ð°Ð²Ð¸Ð°Ñ‚ÑƒÑ€Ð½Ð¾Ðµ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ, Ð°ÑÑÐ¾Ñ†Ð¸Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ð¾Ðµ Ñ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸ÐµÐ¼.
+	// ÐŸÑ€Ð¸Ð¼ÐµÑ€ ÑÐ¾Ð±Ñ‹Ñ‚Ð¸Ñ: Ñ‰ÐµÐ»Ñ‡Ð¾Ðº Ð¼Ñ‹ÑˆÐºÐ¸ Ð¿Ð¾ Ð¸ÐºÐ¾Ð½ÐºÐµ Ð² Ñ‚Ñ€ÑÐµ.
 
 	pNID->uFlags = NIF_TIP | NIF_ICON | NIF_MESSAGE | NIF_INFO;
-	// NIF_ICON - ïîëå hIcon ñîäåðæèò êîððåêòíîå çíà÷åíèå (ïîçâîëÿåò ñîçäàòü èêîíêó â òðýå).
-	// NIF_MESSAGE - ïîëå uCallbackMessage ñîäåðæèò êîððåêòíîå çíà÷åíèå
-	// (ïîçâîëÿåò ïîëó÷àòü ñîîáùåíèÿ îò èêîíêè â òðýå).
-	// NIF_TIP - ïîëå szTip ñîäåðæèò êîððåêòíîå çíà÷åíèå (ïîçâîëÿåò ñîçäàòü âñïëûâàþùóþ ïîäñêàçêó äëÿ èêîíêè â òðýå).
-	// NIF_INFO - ïîëå szInfo ñîäåðæèò êîððåêòíîå çíà÷åíèå (ïîçâîëÿåò ñîçäàòü Balloon ïîäñêàçêó äëÿ èêîíêè â òðýå).
-	lstrcpy(pNID->szInfo, TEXT("Íàó÷èñü ñëåïîé ïå÷àòè)"));
+	// NIF_ICON - Ð¿Ð¾Ð»Ðµ hIcon ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ñ‚ ÐºÐ¾Ñ€Ñ€ÐµÐºÑ‚Ð½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ (Ð¿Ð¾Ð·Ð²Ð¾Ð»ÑÐµÑ‚ ÑÐ¾Ð·Ð´Ð°Ñ‚ÑŒ Ð¸ÐºÐ¾Ð½ÐºÑƒ Ð² Ñ‚Ñ€ÑÐµ).
+	// NIF_MESSAGE - Ð¿Ð¾Ð»Ðµ uCallbackMessage ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ñ‚ ÐºÐ¾Ñ€Ñ€ÐµÐºÑ‚Ð½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ
+	// (Ð¿Ð¾Ð·Ð²Ð¾Ð»ÑÐµÑ‚ Ð¿Ð¾Ð»ÑƒÑ‡Ð°Ñ‚ÑŒ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ Ð¾Ñ‚ Ð¸ÐºÐ¾Ð½ÐºÐ¸ Ð² Ñ‚Ñ€ÑÐµ).
+	// NIF_TIP - Ð¿Ð¾Ð»Ðµ szTip ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ñ‚ ÐºÐ¾Ñ€Ñ€ÐµÐºÑ‚Ð½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ (Ð¿Ð¾Ð·Ð²Ð¾Ð»ÑÐµÑ‚ ÑÐ¾Ð·Ð´Ð°Ñ‚ÑŒ Ð²ÑÐ¿Ð»Ñ‹Ð²Ð°ÑŽÑ‰ÑƒÑŽ Ð¿Ð¾Ð´ÑÐºÐ°Ð·ÐºÑƒ Ð´Ð»Ñ Ð¸ÐºÐ¾Ð½ÐºÐ¸ Ð² Ñ‚Ñ€ÑÐµ).
+	// NIF_INFO - Ð¿Ð¾Ð»Ðµ szInfo ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ñ‚ ÐºÐ¾Ñ€Ñ€ÐµÐºÑ‚Ð½Ð¾Ðµ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ (Ð¿Ð¾Ð·Ð²Ð¾Ð»ÑÐµÑ‚ ÑÐ¾Ð·Ð´Ð°Ñ‚ÑŒ Balloon Ð¿Ð¾Ð´ÑÐºÐ°Ð·ÐºÑƒ Ð´Ð»Ñ Ð¸ÐºÐ¾Ð½ÐºÐ¸ Ð² Ñ‚Ñ€ÑÐµ).
+	lstrcpy(pNID->szInfo, TEXT("Try blind typing)"));
 	lstrcpy(pNID->szInfoTitle, TEXT("TKB"));
-	pNID->uID = IDI_ICON1; // ïðåäîïðåäåë¸ííûé èäåíòèôèêàòîð èêîíêè
-	 
+	pNID->uID = IDI_ICON1; // Ð¿Ñ€ÐµÐ´Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»Ñ‘Ð½Ð½Ñ‹Ð¹ Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ð¸ÐºÐ¾Ð½ÐºÐ¸
+
 }
 
-BOOL CMainModalDialog::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam) 
+std::wstring LoadText()
+{
+	srand(time(0));
+	fs::path p = fs::current_path().wstring() + TEXT("\\TextForType");
+	std::vector<std::wstring> strings;
+	int count = 0;
+	for (const auto& entry : fs::directory_iterator(p))
+	{
+		strings.push_back(entry.path().wstring());
+		count++;
+	}
+	std::wifstream file(strings[rand() % count]);
+	std::wstring result;
+	getline(file, result);
+	return result;
+}
+
+BOOL  CMainModalDialog::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam)
 {
 	//use mutex to check how many dialog exist (must be only one main dialog)
 	if (!SingleWindowCheck(hwnd)) return FALSE;
 
-	//set HWND for main dialog
-	SetWindowText(hwnd, TEXT("TKB"));
-	hDialog = hwnd;
 
-	//set HWND menu and attach menu to main dialog
 	hMenu = LoadMenu(GetModuleHandle(NULL), MAKEINTRESOURCE(IDR_MENU1));
-	SetMenu(hDialog, hMenu);
-
-	//lf.lfHeight = 20;
-	//hFont = CreateFontIndirect(&lf);
-	//hEdit = GetDlgItem(hwnd, IDC_RESULT);
-	//SendMessage(hEdit, WM_SETFONT, (WPARAM)hFont, TRUE);
+	
+	// connect menu to dialog
+	SetMenu(hwnd, hMenu);
 
 	//set tray icon and notifications
 	TrayInit(hwnd);
 
+	uProgressbarPosition = 0;
+
+	hDialog = hwnd;
+	hMain = GetDlgItem(hwnd, IDC_MAIN);
+	hProgress = GetDlgItem(hwnd, IDC_PROGRESS1);
+	hMistakes = GetDlgItem(hwnd, IDC_MISSTAKES);
+	hTime = GetDlgItem(hwnd, IDC_TIME);
+	hSpeed = GetDlgItem(hwnd, IDC_SPEED);
+	uMistakes = 0;
+
+	for (int i = 0; i < 10; i++)
+	{
+		hNumbers[i] = GetDlgItem(hDialog, IDC_NUM1 + i);
+	}
+
+	for (int i = 0; i < 26; i++)
+	{
+		hCharacters[i] = GetDlgItem(hDialog, IDC_A + i);
+	}
+
+	ButtonComma = GetDlgItem(hDialog, IDC_COMA);
+	ButtonDot = GetDlgItem(hDialog, IDC_DOT);
+
+	ButtonSpace = GetDlgItem(hDialog, IDC_SPACE);
+
+
+
+	hndlTime = CreateThread(NULL, 0, TimeThread, hTime, 0, NULL);
+	hndlSpeed = CreateThread(NULL, 0, SpeedThread, hSpeed, 0, NULL);
+
+
+	minutes = 3;
+	seconds = 0;
+
+	srand(time(NULL));
+	_tcscpy_s(tcTextMain, LoadText().c_str());
+	_tcscpy_s(tcCurrentText, tcTextMain);
+	int textEditLength = _tcslen(tcTextMain);
+	SendMessage(hProgress, PBM_SETRANGE, 0, MAKELPARAM(0, textEditLength));
+	SetWindowText(hMain, tcTextMain);
+
+	hHook = SetWindowsHookEx(WH_KEYBOARD, KeyboardProc, NULL, GetCurrentThreadId());
+
+
+	// set font
+	memset(&lf, 0, sizeof(lf));
+	lf.lfHeight = 40;
+	hFont = CreateFontIndirect(&lf);
+	SendMessage(hMain, WM_SETFONT, (WPARAM)hFont, TRUE);
+	SendMessage(hTime, WM_SETFONT, (WPARAM)hFont, TRUE);
+	SendMessage(hSpeed, WM_SETFONT, (WPARAM)hFont, TRUE);
+	SendMessage(hMistakes, WM_SETFONT, (WPARAM)hFont, TRUE);
+
+
+	SetFocus(hMain);
+
 	return TRUE;
 }
 
-
-void CMainModalDialog::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
+DWORD WINAPI SpeedThread(LPVOID lp)
 {
+	while (true)
+	{
+		clicks = 0;
+		Sleep(5000);
+		iSpeed = clicks * 12;
 
-	/*
-	if (id == IDC_GASSTATION)
-	{
-		GasStationModalDialog gs;
-		INT_PTR result = DialogBox
-		(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG2), hwnd, GasStationModalDialog::DlgProc);
-		CMainModalDialog::Count();
-		SetWindowText(hEdit, std::to_wstring(dCheck).c_str());
+		wsprintf(tcSpeedText, TEXT("%d"), iSpeed);
+		SetWindowText(hSpeed, tcSpeedText);
 	}
-	if (id == IDC_CAFE)
-	{
-		CafeModalDialog cafe;
-		INT_PTR result = DialogBox
-		(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG3), hwnd, CafeModalDialog::DlgProc);
-		CMainModalDialog::Count();
-		SetWindowText(hEdit, std::to_wstring(dCheck).c_str());
-	}
-	*/
+	return 0;
 }
 
-void CMainModalDialog::Cls_OnSize(HWND hwnd, UINT state, int cx, int cy)
+DWORD WINAPI TimeThread(LPVOID lp)
+{
+	HWND hTime = HWND(lp);
+
+	TCHAR textMyTime[255];
+	TCHAR textSeconds[255];
+
+	while (true)
+	{
+		seconds--;
+
+		if (minutes == 0 && seconds == -1) break;
+
+		if (seconds == -1)
+		{
+			minutes--;
+			seconds = 59;
+		}
+
+		if (minutes < 11) _stprintf_s(textMyTime, TEXT("0%d"), minutes);
+		else _stprintf_s(textMyTime, TEXT("%d"), minutes);
+
+
+		if (seconds < 11) wcscat_s(textMyTime, 255, TEXT(":0"));
+		else wcscat_s(textMyTime, 255, TEXT(":"));
+
+
+		_stprintf_s(textSeconds, TEXT("%d"), seconds);
+		wcscat_s(textMyTime, 255, textSeconds);
+
+		SetWindowText(hTime, textMyTime);
+		Sleep(980);
+
+		if (minutes == 0 && seconds == 0)
+		{
+			
+			minutes = 3;
+			seconds = 0;
+			//ResumeThread(hndlTime);
+			srand(time(NULL));
+
+			_tcscpy_s(tcTextMain, LoadText().c_str());
+
+
+
+			_tcscpy_s(tcCurrentText, tcTextMain);
+			uMistakes = 0;
+			swprintf_s(tcTextMistakes, TEXT("%d"), uMistakes);
+			SetWindowText(hMistakes, tcTextMistakes);
+
+			iTextLength = _tcsclen(tcTextMain);
+
+			uProgressbarPosition = 0;
+			SendMessage(hProgress, PBM_SETRANGE, 0, MAKELPARAM(0, iTextLength));
+			SendMessage(hProgress, PBM_SETPOS, uProgressbarPosition, 0);
+			SetWindowText(hMain, tcTextMain);
+		}
+	}
+	return 0;
+}
+
+LRESULT CALLBACK KeyboardProc(int idCode, WPARAM wParam, LPARAM lParam)
+{
+	if (HC_ACTION == idCode)
+	{
+		TCHAR szMistakes[TEXT_SIZE];
+		HWND hWnd = GetFocus();
+		static TCHAR buf[40];
+		GetClassName(hWnd, buf, 40);
+
+		if (lstrcmpi(buf, TEXT("EDIT")) == 0 && (lParam & 0x80000000)) // ÐºÐ»Ð°Ð²Ð¸ÑˆÐ° Ð¾Ñ‚Ð¿ÑƒÑ‰ÐµÐ½Ð°!!!
+		{
+			if (wParam <= 32) // Ð½ÐµÐ¿ÐµÑ‡Ð°Ñ‚Ð°ÐµÐ¼Ñ‹Ð¹ ÑÐ¸Ð¼Ð²Ð¾Ð»
+			{
+				wsprintf(buf, TEXT("0X%X"), wParam);
+			}
+			else
+			{
+				if (!(wParam >= 'A' && wParam <= 'Z')) // Ñ†Ð¸Ñ„Ñ€Ñ‹ Ð¸ Ð½ÐµÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ ÑÐ¸Ð¼Ð²Ð¾Ð»Ñ‹
+				{
+					wsprintf(buf, TEXT("%c"), wParam);
+
+				}
+
+				else
+				{
+					short shift = GetKeyState(VK_SHIFT); // ÐµÑÐ»Ð¸ ÑÑ‚Ð°Ñ€ÑˆÐ¸Ð¹ Ð±Ð¸Ñ‚ Ñ€Ð°Ð²ÐµÐ½ 1, Ñ‚Ð¾ ÐºÐ»Ð°Ð²Ð¸ÑˆÐ° Ð½Ð°Ð¶Ð°Ñ‚Ð°
+					short caps = GetKeyState(VK_CAPITAL); // ÐµÑÐ»Ð¸ Ð¼Ð»Ð°Ð´ÑˆÐ¸Ð¹ Ð±Ð¸Ñ‚ Ñ€Ð°Ð²ÐµÐ½ 1, Ñ‚Ð¾ ÐºÐ»Ð°Ð²Ð¸ÑˆÐ° Ð¿ÐµÑ€ÐµÐºÐ»ÑŽÑ‡ÐµÐ½Ð°
+					short space = GetKeyState(VK_SPACE); // ÐµÑÐ»Ð¸ Ð¼Ð»Ð°Ð´ÑˆÐ¸Ð¹ Ð±Ð¸Ñ‚ Ñ€Ð°Ð²ÐµÐ½ 1, Ñ‚Ð¾ ÐºÐ»Ð°Ð²Ð¸ÑˆÐ° Ð¿ÐµÑ€ÐµÐºÐ»ÑŽÑ‡ÐµÐ½Ð°
+					if ((shift & 0x8000) && !(caps & 1) || !(shift & 0x8000) && (caps & 1))
+					{
+						wsprintf(buf, TEXT("%c"), wParam);
+					}
+					else
+					{
+						wsprintf(buf, TEXT("%c"), tolower(wParam));
+					}
+				}
+			}
+
+			for (int i = 0; i < 10; i++)
+			{
+				if (buf[0] == TEXT('1' + i))
+					SendMessage(hNumbers[i], WM_LBUTTONDOWN, 0, 0);
+			}
+
+			for (int i = 0; i < 26; i++)
+			{
+				if (tolower(buf[0]) == TEXT('a' + i))
+					SendMessage(hCharacters[i], WM_LBUTTONDOWN, 0, 0);
+			}
+
+			if (buf[0] == TEXT('Â¼')) 
+				SendMessage(ButtonComma, WM_LBUTTONDOWN, 0, 0);
+			if (buf[0] == TEXT('Â¾')) 
+				SendMessage(ButtonDot, WM_LBUTTONDOWN, 0, 0);
+			if ((buf[0] == TEXT('0') && buf[1] == TEXT('X') && buf[2] == TEXT('2') && buf[3] == TEXT('0'))) 
+				SendMessage(ButtonSpace, WM_LBUTTONDOWN, 0, 0);
+
+			Sleep(50);
+
+			for (int i = 0; i < 10; i++)
+			{
+				SendMessage(hNumbers[i], WM_LBUTTONUP, 0, 0);
+			}
+
+			for (int i = 0; i < 26; i++)
+			{
+				SendMessage(hCharacters[i], WM_LBUTTONUP, 0, 0);
+			}
+
+			SendMessage(ButtonComma, WM_LBUTTONUP, 0, 0);
+			SendMessage(ButtonDot, WM_LBUTTONUP, 0, 0);
+			SendMessage(ButtonSpace, WM_LBUTTONUP, 0, 0);
+			SendDlgItemMessage(hDialog, IDC_MAIN, WM_SETFOCUS, 0, 0);
+			SetFocus(hMain);
+
+			++clicks;
+
+			if (buf[0] == TEXT('0') && buf[1] == TEXT('X') && buf[2] == TEXT('2') && buf[3] == TEXT('0'))
+				buf[0] = TEXT(' ');
+
+			if (buf[0] == TEXT('Â¾')) buf[0] = TEXT('.');
+
+			if (buf[0] == TEXT('Â¼')) buf[0] = TEXT(',');
+
+
+			GetWindowText(hWnd, TextKB, TEXT_SIZE);
+
+			if (_tcslen(TextKB) == 0)
+			{
+				SuspendThread(hndlTime);
+				SuspendThread(hndlSpeed);
+
+
+				INT_PTR result = MessageBox(NULL, TEXT("Try again?"), TEXT("DONE"), MB_YESNO);
+				if (result == IDNO)
+					SendMessage(hDialog, WM_CLOSE, NULL, NULL);
+
+
+
+				minutes = 3;
+				seconds = 0;
+				ResumeThread(hndlTime);
+				SuspendThread(hndlSpeed);
+
+				srand(time(NULL));
+
+				_tcscpy_s(tcTextMain, LoadText().c_str());
+
+				_tcscpy_s(tcCurrentText, tcTextMain);
+				uMistakes = 0;
+				swprintf_s(tcTextMistakes, TEXT("%d"), uMistakes);
+				SetWindowText(hMistakes, tcTextMistakes);
+
+				iTextLength = _tcsclen(tcTextMain);
+
+				uProgressbarPosition = 0;
+				SendMessage(hProgress, PBM_SETRANGE, 0, MAKELPARAM(0, iTextLength));
+				SendMessage(hProgress, PBM_SETPOS, uProgressbarPosition, 0);
+				SetWindowText(hMain, tcTextMain);
+
+
+
+				return 1;
+			}
+
+			int iTextLength = _tcslen(TextKB);
+			if (buf[0] == TextKB[0])
+			{
+				for (int i = 0; i < iTextLength - 1; ++i)
+					TextKB[i] = TextKB[i + 1];
+				TextKB[iTextLength - 1] = 0;
+
+				SendMessage(hProgress, PBM_SETPOS, uProgressbarPosition++, 0);
+
+				SetWindowText(hWnd, TextKB);
+			}
+			else
+			{
+
+				if (buf[0] >= TEXT('a') && buf[0] <= TEXT('z') || buf[0] >= TEXT('A') && buf[0] <= TEXT('Z') 
+					|| buf[0] >= TEXT('1') && buf[0] <= TEXT('9') || buf[0] == TEXT('.') || buf[0] == TEXT(',') || buf[0] == TEXT(' '))
+				{
+					uMistakes++;
+					swprintf_s(szMistakes, TEXT("%d"), uMistakes);
+					SetDlgItemText(hDialog, IDC_MISSTAKES, szMistakes);
+				}
+			}
+		}
+	}
+	return CallNextHookEx(hHook, idCode, wParam, lParam);
+}
+
+void  CMainModalDialog::Cls_OnSize(HWND hwnd, UINT state, int cx, int cy)
 {
 	if (state == SIZE_MINIMIZED)
 	{
-		ShowWindow(hwnd, SW_HIDE); // Ïðÿ÷åì îêíî
-		Shell_NotifyIcon(NIM_ADD, pNID); // Äîáàâëÿåì èêîíêó â òðýé
+		SuspendThread(hndlTime);
+		SuspendThread(hndlSpeed);
+		ShowWindow(hwnd, SW_HIDE); // ÐŸÑ€ÑÑ‡ÐµÐ¼ Ð¾ÐºÐ½Ð¾
+		Shell_NotifyIcon(NIM_ADD, pNID); // Ð”Ð¾Ð±Ð°Ð²Ð»ÑÐµÐ¼ Ð¸ÐºÐ¾Ð½ÐºÑƒ Ð² Ñ‚Ñ€ÑÐ¹
 	}
 }
 
-// îáðàáîò÷èê ïîëüçîâàòåëüñêîãî ñîîáùåíèÿ
-void CMainModalDialog::OnTrayIcon(WPARAM wp, LPARAM lp)
+// Ð¾Ð±Ñ€Ð°Ð±Ð¾Ñ‚Ñ‡Ð¸Ðº Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒÑÐºÐ¾Ð³Ð¾ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ñ
+void  CMainModalDialog::OnTrayIcon(WPARAM wp, LPARAM lp)
 {
-	// WPARAM - èäåíòèôèêàòîð èêîíêè
-	// LPARAM - ñîîáùåíèå îò ìûøè èëè êëàâèàòóðíîå ñîîáùåíèå
+	// WPARAM - Ð¸Ð´ÐµÐ½Ñ‚Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€ Ð¸ÐºÐ¾Ð½ÐºÐ¸
+	// LPARAM - ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ Ð¾Ñ‚ Ð¼Ñ‹ÑˆÐ¸ Ð¸Ð»Ð¸ ÐºÐ»Ð°Ð²Ð¸Ð°Ñ‚ÑƒÑ€Ð½Ð¾Ðµ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ
 	if (lp == WM_LBUTTONDBLCLK)
 	{
-		Shell_NotifyIcon(NIM_DELETE, pNID); // Óäàëÿåì èêîíêó èç òðýÿ
-		ShowWindow(hDialog, SW_NORMAL); // Âîññòàíàâëèâàåì îêíî
-		SetForegroundWindow(hDialog); // óñòàíàâëèâàåì îêíî íà ïåðåäíèé ïëàí
+		Shell_NotifyIcon(NIM_DELETE, pNID); // Ð£Ð´Ð°Ð»ÑÐµÐ¼ Ð¸ÐºÐ¾Ð½ÐºÑƒ Ð¸Ð· Ñ‚Ñ€ÑÑ
+		ShowWindow(hDialog, SW_NORMAL); // Ð’Ð¾ÑÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¾ÐºÐ½Ð¾
+		SetForegroundWindow(hDialog); // ÑƒÑÑ‚Ð°Ð½Ð°Ð²Ð»Ð¸Ð²Ð°ÐµÐ¼ Ð¾ÐºÐ½Ð¾ Ð½Ð° Ð¿ÐµÑ€ÐµÐ´Ð½Ð¸Ð¹ Ð¿Ð»Ð°Ð½
+		ResumeThread(hndlTime);
+		ResumeThread(hndlSpeed);
 	}
 }
 
 BOOL CALLBACK CMainModalDialog::DlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	switch(message)
+	wp = wParam;
+
+	switch (message)
 	{
-		if (message == WM_KEYDOWN)
-		{
-			MessageBox(NULL, TEXT("Test"), TEXT("test"), MB_OK);
-
-			if (wParam == VK_RETURN)
-			{
-			}
-		}
-
 		HANDLE_MSG(hwnd, WM_CLOSE, ptr->Cls_OnClose);
 		HANDLE_MSG(hwnd, WM_INITDIALOG, ptr->Cls_OnInitDialog);
 		HANDLE_MSG(hwnd, WM_COMMAND, ptr->Cls_OnCommand);
 		HANDLE_MSG(hwnd, WM_SIZE, ptr->Cls_OnSize);
-
-		
 	}
-	// ïîëüçîâàòåëüñêîå ñîîáùåíèå
+
+	// Ð¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ñ‚ÐµÐ»ÑŒÑÐºÐ¾Ðµ ÑÐ¾Ð¾Ð±Ñ‰ÐµÐ½Ð¸Ðµ
 	if (message == WM_ICON)
 	{
 		ptr->OnTrayIcon(wParam, lParam);
 		return TRUE;
 	}
 	return FALSE;
+}
+
+void  CMainModalDialog::Cls_OnClose(HWND hwnd)
+{
+	EndDialog(hwnd, 0);
+}
+
+void  CMainModalDialog::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
+{
+	if (LOWORD(wp) == ID_MENU_RESTART)
+	{
+		minutes = 3;
+		seconds = 0;
+		/*ResumeThread(hndlTime);*/
+		srand(time(NULL));
+		_tcscpy_s(tcTextMain, LoadText().c_str());
+
+
+		_tcscpy_s(tcCurrentText, tcTextMain);
+		uMistakes = 0;
+		swprintf_s(tcTextMistakes, TEXT("%d"), uMistakes);
+		SetWindowText(hMistakes, tcTextMistakes);
+		uProgressbarPosition = 0;
+		SendMessage(hProgress, PBM_SETPOS, uProgressbarPosition, 0);
+		SetWindowText(hMain, tcTextMain);
+	}
 }
